@@ -1519,12 +1519,15 @@ class Trainer:
                 # Apply gradient checkpointing to auto-wrapped sub-modules if specified
                 def auto_wrapper_callable(m, *args, **kwargs):
                     return FSDP(checkpoint_module(m), *args, **kwargs)
+            # Torch compile requires use_orig_params in FSDP
+            use_orig_params = self.args.torch_compile and is_torch_compile_available()
 
             # Wrap the base model with an outer FSDP wrapper
             self.model = model = FSDP(
                 model,
                 auto_wrap_policy=auto_wrap_policy,
                 auto_wrapper_callable=auto_wrapper_callable,
+                use_orig_params=use_orig_params,
                 **fsdp_kwargs,
             )
 
