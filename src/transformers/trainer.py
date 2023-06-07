@@ -1522,6 +1522,9 @@ class Trainer:
             # Torch compile requires use_orig_params in FSDP
             use_orig_params = self.args.torch_compile and is_torch_compile_available()
 
+            print("holi")
+            print(use_orig_params)
+
             # Wrap the base model with an outer FSDP wrapper
             self.model = model = FSDP(
                 model,
